@@ -1,0 +1,107 @@
+"EJERCICIO 2"
+(define pertenece (lambda (el l1 l2)
+                    (if (null? l1)
+                        #f
+                        (if (null? l2)
+                            #f
+                            (if (eqv? el (car l1))
+                                (if (eqv? el (car l2))
+                                    #t
+                                    (pertenece el l1 (cdr l2))
+                                    )
+                                (pertenece el (cdr l1) l2)
+                                )
+                            )
+                        )
+                    ))
+
+(pertenece 'a '(a b c) '(r f g a))
+(pertenece 'a '(a b c) '(r f g h))
+
+"EJERCICIO 3"
+(define cant-izq (lambda (el list4)
+                   (if (null? list4)
+                       (display "error, el elemento no se encuentra en la lista")
+                       (if (eqv? el (car list4))
+                           0
+                           (+ 1 (cant-izq el (cdr list4)))
+                           )
+                       )
+                   ))
+(cant-izq 'd '(a b c d e f))
+
+"EJERCICIO 4"
+(define addif (lambda (el list4)
+                (if (null? list4)
+                    (cons el list4)
+                    (if (eqv? el (car list4))
+                        list4
+                        (cons (car list4) (addif el (cdr list4)))
+                        )
+                    )
+                ))
+(addif 'a '(b c d))
+(addif 'a '(a b c d))
+(addif 'c '(b c d))
+
+"EJERCICIO 5"
+(define fechap (lambda (dia mes anio)
+                 (if (> mes 12)
+                     #f
+                     (if (> dia 31)
+                         #f
+                         (if (and (eqv? 2 mes) (> dia 28))
+                             #f
+                             (if (and (or (eqv? mes 1) (eqv? mes 3) (eqv? mes 5) (eqv? mes 7) (eqv? mes 9) (eqv? mes 11)) (> dia 30))
+                                 #f
+                                 #t
+                                 )
+                             )
+                         )
+                     )
+                 ))
+
+(fechap 12 12 1986)
+(fechap 12 30 1987)
+(fechap 31 2 1986)
+(fechap 31 11 1976)
+
+"EJERCICIO 6"
+(define get-prof (lambda (list4)
+                   (if (null? list4)
+                       0
+                       (if (list? (car list4))
+                           (let ((prof1 (+ 1 (get-prof (car list4)))) (prof2 (get-prof (cdr list4))))
+                             (if (> prof1 prof2)
+                                 prof1
+                                 prof2
+                                 )
+                             )
+                           (get-prof (cdr list4))
+                           )
+                       )
+                   ))
+(get-prof '((1 (2)) (((5 7)) 4))
+
+"EJERCICIO 7"
+(define concatenar (lambda (l1 l2)
+                     (if (null? l1)
+                         l2
+                         (cons (car l1) (concatenar (cdr l1) l2))
+                         )
+                     ))
+
+(define aplanar (lambda (list4)
+                  (if (null? list4)
+                      '()
+                      (if (list? (car list4))
+                          (concatenar (aplanar (car list4)) (aplanar (cdr list4)))
+                          (cons (car list4) (aplanar (cdr list4)))
+                          )
+                      )
+                  ))
+(aplanar '((1 2 3) (9 (2 3 4)) ((((3 4 (7)))))))
+
+"EJERCICIO 8"
+;agarrar el utlimo
+;cons con el cdr invertido de la lista invertida

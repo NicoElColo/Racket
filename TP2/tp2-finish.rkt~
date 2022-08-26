@@ -1,0 +1,121 @@
+(define a 10)
+(define b 5)
+(define c 15)
+
+"EJERCICIO 1"
+"a"
+(+ (/ (* 7 a) b) (/ (* 3 a) b) (/ (* 7 a) b))
+
+(let ((x (/ a b)))
+  (+ (* 7 x) (* 3 x) (* 7 x)))
+
+(let ((x (/ a b)))
+  (let ((y (* 7 x)) (z (* 3 x)))
+    (+ (* 2 y) z)))
+
+"b"
+(cons (car (list 'a 'b 'c)) (cdr (list 'a 'b 'c)))
+(let ((x (list a b c)))
+  (cons (car x) (cdr x)))
+
+"EJERCICIO 2"
+(let ((x 9))
+  (* x
+     (let ((x (/ x 3)))
+       (+ x x))))
+;El segundo let se utiliza exclusivamente para retornar 6
+
+"EJERCICIO 3"
+"a"
+(let ((x 'a) (y 'b))
+  (list (let ((x 'c)) (cons x y))
+        (let ((y 'd)) (cons x y))))
+
+(let ((x 'a) (y 'b))
+  (list (let ((z 'c)) (cons z y))
+        (let ((w 'd)) (cons x w))))
+
+"b"
+(let ((x '((a b) c)))
+  (cons (let ((x (cdr x)))
+          (car x))
+        (let ((x (car x)))
+          (cons (let ((x (cdr x)))
+                  (car x))
+                (cons (let ((x (car x)))
+                        x)
+                      (cdr x))))))
+
+(let ((x '((a b) c)))
+  (cons (let ((y (cdr x)))
+          (car y))
+        (let ((cx (car x)))
+          (cons (let ((dx (cdr cx)))
+                  (car dx))
+                (cons (let ((ax (car cx)))
+                        ax)
+                      (cdr cx))))))
+
+"EJERCICIO 4"
+"a"
+(let ((f (lambda (x) x)))
+  (f 'a))
+"b"
+(let ((f (lambda x x)))
+  (f 'a))
+"c"
+(let ((f (lambda (x . y) x)))
+  (f 'a))
+"d"
+(let ((f (lambda (x . y) y)))
+  (f 'a))
+
+"EJERCICIO 5"
+(define conv_op (lambda (ecua)
+                  (let ((par1 (car ecua))
+                        (oper (car (cdr ecua)))
+                        (par2 (cdr (cdr ecua))))
+                    (cons oper (cons par1 par2)))))
+(conv_op '(34 + 2))
+
+"EJERCICIO 6"
+(define short (lambda (lista)
+                (if (and (list? lista) (> (length lista) 1))
+                    (let ((el1 (car lista)) (el2 (car (cdr lista))))
+                      (if (> (length el1) (length el2))
+                          el2
+                          el1)))))
+(short '((a b) (d e)))
+
+"EJERCICIO 7"
+(define area (lambda (radio) (* radio 3.14 radio)))
+(area 3)
+
+"EJERCICIO 8"
+(define per (lambda (radio) (* 2 3.14 radio)))
+(per 3)
+
+"EJERCICIO 9"
+(define circlestaff (lambda (radio)
+                      (cons (area radio) (cons (per radio) '()))))
+(circlestaff 3)
+
+"EJERCICIO 10"
+(define distance2d (lambda (punto1 punto2)
+                     (let ((x1 (car punto1)) (y1 (cdr punto1)) (x2 (car punto2)) (y2 (cdr punto2)))
+                       (let ((xd (- x2 x1)) (yd (- y2 y1)))
+                         (sqrt(+ (* xd xd) (* yd yd)))))))
+(distance2d '(1 . 1) '(2 . 2))
+
+"EJERCICIO 11"
+(define proximo (lambda (punto lista)
+                  (let ((dist (distance2d punto (car lista))))
+                    (if (= (length lista) 1)
+                        dist
+                        (if (< (proximo punto (cdr lista)) dist)
+                            (proximo punto (cdr lista))
+                            dist
+                            )))))
+(proximo '(1 . 1) '((5 . 5) (3 . 3) (4 . 4) (2 . 2) (3 . 4)))
+                            
+               

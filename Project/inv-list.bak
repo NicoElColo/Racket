@@ -1,0 +1,26 @@
+;invertir listas
+"INV LIST V1"
+
+;concatena el elemento al final de la lista
+(define conc-el (lambda (lista el)
+                  (if (null? lista)
+                      (cons el lista)
+                      (cons (car lista) (conc-el (cdr lista) el))
+                      )
+                  ))
+
+;invierte 
+(define inv-list (lambda (lista)
+                   (if (null? lista)
+                       '()
+                       (if (list? (car lista))
+                           (conc-el (inv-list (cdr lista)) (inv-list (car lista)))
+                           (if (null? (cdr lista))
+                               lista
+                               (conc-el (inv-list (cdr lista)) (car lista))
+                               )
+                           )
+                       )
+                   ))
+
+(inv-list '(1 (1 2 3) 2 3 4 5))

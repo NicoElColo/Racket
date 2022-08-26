@@ -1,0 +1,56 @@
+"EJERCICIO 1"
+(define factorial (lambda (num)
+                    (if (= num 1)
+                        1
+                        (* num (factorial (- num 1)))
+                        )))
+(factorial 4)
+
+
+"EJERCICIO 2"
+(define largo (lambda (list)
+                (if (null? list)
+                    0
+                    (+ (largo (cdr list)) 1)
+                    )))
+(largo '(2 3 4 5 6 7 8 9))
+
+
+"EJERCICIO 3"
+(define count-el (lambda (el list)
+                   (if (null? list)
+                       0
+                       (if (= el (car list))
+                           (+ (count-el el (cdr list)) 1)
+                           (+ (count-el el (cdr list)) 0)
+                       ))))
+
+(count-el 3 '(1 14 3 54 2 3 43 6 3 8 9 0 3 2))
+
+
+"EJERCICIO 4"
+(define subst (lambda (find reem list)
+                     (if (null? list)
+                         ()
+                         (if (eqv? (car list) find)
+                             (cons reem (subst find reem (cdr list)))
+                             (cons (car list) (subst find reem (cdr list)))
+                             ))))
+
+'(2 3 3 5 32 4 6 7 8 3)
+(subst 3 4 '(2 3 3 5 32 4 6 7 8 3))
+
+
+"EJERCICIO 5"
+(define agrupar (lambda (el lista)
+                  (if (null? (car (cdr lista)))
+                      (())
+                      (if (eqv? (car (car lista)) el)
+                          (cons el (car (car lista)))
+                          (agrupar el (cdr lista))
+                          ))))
+(define agruparfeo (lambda (lista)
+                     (if (null? lista)
+                         ()
+                         (agruparfeo (cdr lista))
+                         )))

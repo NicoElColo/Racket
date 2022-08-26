@@ -1,0 +1,298 @@
+;convierte una lista representando una suma de manera tradicional a la que entiende racket
+(define conv_op (lambda (ecua)
+                  (let ((par1 (car ecua))
+                        (oper (car (cdr ecua)))
+                        (par2 (cdr (cdr ecua))))
+                    (cons oper (cons par1 par2))
+                    )
+                  ))
+
+;retorna la longitud de la lista
+(define largo (lambda (list4)
+                (if (null? list4)
+                    0
+                    (+ 1 (largo (cdr list4)))
+                    )
+                ))
+
+;recibe una lista de 2 listas y retorna la mas corta de las 2
+(define short (lambda (lista)
+                (if (and (list? lista) (> (length lista) 1))
+                    (let ((el1 (car lista)) (el2 (car (cdr lista))))
+                      (if (> (largo el1) (largo el2))
+                          el2
+                          el1
+                          )
+                      )
+                    )
+                ))
+
+;retorna el factorial de un numero
+(define factorial (lambda (num)
+                    (if (= num 1)
+                        1
+                        (* num (factorial (- num 1)))
+                        )
+                    ))
+
+;cuenta la cantidad de veces que aparece un elemento en una lista
+(define count-el (lambda (el list)
+                   (if (null? list)
+                       0
+                       (if (eqv? el (car list))
+                           (+ (count-el el (cdr list)) 1)
+                           (+ (count-el el (cdr list)) 0)
+                           )
+                       )
+                   ))
+
+;recibe 2 elementos y una lista y reemplaza un elemento por otro en la lista
+(define subst (lambda (find reem list)
+                     (if (null? list)
+                         ()
+                         (if (eqv? (car list) find)
+                             (cons reem (subst find reem (cdr list)))
+                             (cons (car list) (subst find reem (cdr list)))
+                             )
+                         )
+                ))
+
+;concatena una lista a otra lista
+(define concatenar (lambda (l1 l2)
+                     (if (null? l1)
+                         l2
+                         (cons (car l1) (concatenar (cdr l1) l2))
+                         )
+                     ))
+
+;devuelve el primer numero de una lista
+(define first-num (lambda (lista)
+                    (if (null? lista)
+                        (display "no ta flaco")
+                        (if (number? (car lista))
+                            (car lista)
+                            (first-num (cdr lista))
+                            )
+                        )
+                    ))
+
+;concatena un elemento al final de una lista
+(define attach-at-end (lambda (lista x)
+                        (if (null? lista)
+                            (cons x lista)
+                            (cons (car lista) (attach-at-end x (cdr lista)))
+                            )
+                        ))
+
+;recibe una lista de numeros y retorna la lista con el valor abs de estos
+(define m-abs (lambda (lista)
+              (if (null? lista)
+                  lista
+                  (if (< (car lista) 0)
+                      (cons (- 0 (car lista)) (m-abs (cdr lista)))
+                      (cons (car lista) (m-abs (cdr lista)))
+                      )
+                  )
+              ))
+
+;recibe 2 listas impropias que representan puntos y retorna la distancia entre ellos
+(define distance2d (lambda (punto1 punto2)
+                     (let ((x1 (car punto1)) (y1 (cdr punto1)) (x2 (car punto2)) (y2 (cdr punto2)))
+                       (let ((xd (- x2 x1)) (yd (- y2 y1)))
+                         (sqrt(+ (* xd xd) (* yd yd)))
+                         )
+                       )
+                     ))
+
+;ejemplo de syntax para structs
+(define-struct point (x y))
+
+(define dist (lambda (p1 p2)
+               (let ((x1 (point-x p1)) (x2 (point-x p2)) (y1 (point-y p1)) (y2 (point-y p2)))
+                 (sqrt (+ (* (- x2 x1) (- x2 x1)) (* (- y2 y1) (- y2 y1))))
+                 )))
+
+(define p1 (make-point 1 1))
+(define p2 (make-point 2 2))
+
+;retorna el peso en ascii de una lista de char
+(define pesopal (lambda (word)
+                  (if (null? word)
+                      0
+                      (+ (char->integer (car word)) (pesopal (cdr word)))
+                      )
+                  ))
+
+;recibe una lista de strings
+;la transforma a una lista de listas de char
+;arma una lista con el peso de cada string en ascii
+;crea una lista de listas impropias que vincula cada palabra con su peso
+(define pesopalabra (lambda (list4)
+                      (map cons list4 (map pesopal (map string->list list4)))
+                    ))
+
+;recibe un elemento y una lista de listas impropias donde el cdr es un numero con
+;el cual se va a insertar el elemento en la lista de manera que quede de menor a mayor
+(define inser (lambda (el list4)
+                (if (null? list4)
+                    (cons el list4)
+                    (if (> (cdr el) (cdr (car list4)))
+                        (cons (car list4) (inser el (cdr list4)))
+                        (cons el list4)
+                        )
+                    )
+                ))
+
+;ordena una lista impropia con el cdr como condicion de menor a mayor
+(define ord (lambda (list4)
+              (if (null? list4)
+                  '()
+                  (inser (car list4) (ord (cdr list4)))
+                  )
+              ))
+
+;invierte una lista y tambien las listas interiores (requiere attach-at-end)
+(define inv-list (lambda (lista)
+                   (if (null? lista)
+                       '()
+                       (if (list? (car lista))
+                           (attach-at-end (inv-list (cdr lista)) (inv-list (car lista)))
+                           (if (null? (cdr lista))
+                               lista
+                               (attach-at-end (inv-list (cdr lista)) (car lista))
+                               )
+                           )
+                       )
+                   ))
+
+;recibe un elemento y 2 listas y retorna si el elemento pertenece a ambas
+(define pertenece (lambda (el l1 l2)
+                    (if (null? l1)
+                        #f
+                        (if (null? l2)
+                            #f
+                            (if (eqv? el (car l1))
+                                (if (eqv? el (car l2))
+                                    #t
+                                    (pertenece el l1 (cdr l2))
+                                    )
+                                (pertenece el (cdr l1) l2)
+                                )
+                            )
+                        )
+                    ))
+
+;recibe un elemento y una lista y cuenta la cantidad de elementos de la lista
+;que hay a la izquierda del elemento recibido
+(define cant-izq (lambda (el list4)
+                   (if (null? list4)
+                       (display "error, el elemento no se encuentra en la lista")
+                       (if (eqv? el (car list4))
+                           0
+                           (+ 1 (cant-izq el (cdr list4)))
+                           )
+                       )
+                   ))
+
+;recibe un elemento y una lista y si el elemento no se encuentra, se agrega
+;si el elemento es encontrado, no hace nada
+(define addif (lambda (el list4)
+                (if (null? list4)
+                    (cons el list4)
+                    (if (eqv? el (car list4))
+                        list4
+                        (cons (car list4) (addif el (cdr list4)))
+                        )
+                    )
+                ))
+
+;retorna si una fecha es valida
+(define fechap (lambda (dia mes anio)
+                 (if (> mes 12)
+                     #f
+                     (if (> dia 31)
+                         #f
+                         (if (and (eqv? 2 mes) (> dia 28))
+                             #f
+                             (if (and (or (eqv? mes 1) (eqv? mes 3) (eqv? mes 5) (eqv? mes 7) (eqv? mes 9) (eqv? mes 11)) (> dia 30))
+                                 #f
+                                 #t
+                                 )
+                             )
+                         )
+                     )
+                 ))
+
+;retorna la profundidad de la lista
+;(si la lista no contiene listas interiores, la prof es 0)
+(define get-prof (lambda (list4)
+                   (if (null? list4)
+                       0
+                       (if (list? (car list4))
+                           (let ((prof1 (+ 1 (get-prof (car list4)))) (prof2 (get-prof (cdr list4))))
+                             (if (> prof1 prof2)
+                                 prof1
+                                 prof2
+                                 )
+                             )
+                           (get-prof (cdr list4))
+                           )
+                       )
+                   ))
+
+;recibe una lista de listas y la aplana (extrae los elementos de las
+;listas interiores y los deja a la altura de la lista mas exterior)
+;(requiere concatenar)
+(define aplanar (lambda (list4)
+                  (if (null? list4)
+                      '()
+                      (if (list? (car list4))
+                          (concatenar (aplanar (car list4)) (aplanar (cdr list4)))
+                          (cons (car list4) (aplanar (cdr list4)))
+                          )
+                      )
+                  ))
+
+;recibe una lista de numeros y retorna una lista con los cuadrados de estos
+(define calc-cuadr (lambda (list4)
+                     (if (null? list4)
+                         (display "error")
+                         (map (lambda (x) (* x x)) list4)
+                         )
+                     ))
+
+;retorna si el elemento pertenece a la lista o no
+(define existe (lambda (el list4)
+                 (if (null? list4)
+                     #f
+                     (if (eqv? el (car list4))
+                         #t
+                         (existe el (cdr list4))
+                         )
+                     )
+                 ))
+
+;recibe 2 listas donde retorna los elementos de la 1er lista que no esten en la 2da
+;(requiere existe)
+(define resta-listas (lambda (list1 list2)
+                       (if (null? list1)
+                           list1
+                           (if (existe (car list1) list2)
+                               (resta-listas (cdr list1) list2)
+                               (cons (car list1) (resta-listas (cdr list1) list2))
+                               )
+                           )
+                       ))
+
+;recibe 2 listas y la salida es una lista con los elementos de la 1ra
+;mas los elementos de la 2da que no esten en la 1ra
+;(requiere existe)
+(define suma-listas (lambda (list1 list2)
+                       (if (null? list2)
+                           list1
+                           (if (existe (car list2) list1)
+                               (suma-listas list1 (cdr list2))
+                               (cons (car list2) (suma-listas list1 (cdr list2)))
+                               )
+                           )
+                      ))
